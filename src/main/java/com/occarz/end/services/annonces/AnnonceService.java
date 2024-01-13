@@ -1,6 +1,8 @@
 package com.occarz.end.services.annonces;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,5 +130,39 @@ public class AnnonceService {
         filtreAnnonce.setUtilisateur(utilisateur);
 
         return filtrerAnnonces(filtreAnnonce);
+    }
+
+    // Trier annonces
+    public List<Annonce> trierAnnonce(FiltreAnnonce filtres, String ordre, String field) {
+        // Annonces filtrer
+        List<Annonce> annonces = filtrerAnnonces(filtres);
+
+        switch (field) {
+            case "date" -> {
+                annonces.sort((annonce1, annonce2) -> {
+                    switch (ordre) {
+                        case "asc" -> {
+                            return annonce1.getDateAnnonce().compareTo(annonce2.getDateAnnonce());
+                        }
+                        case "desc" -> {
+                            return annonce2.getDateAnnonce().compareTo(annonce1.getDateAnnonce());
+                        }
+                        default -> {
+                            return 0;
+                        }
+                    }
+                });
+            }
+
+            case "prix" -> {
+                annonces.sort(Comparator.comparingDouble(Annonce::getPrix));
+
+                if (ordre.equals("desc")) {
+                    Collections.reverse(annonces);
+                }
+            }
+        }
+
+        return annonces;
     }
 }

@@ -36,7 +36,7 @@ values
 insert into 
     boite_de_vitesse
 values 
-    (default, 'Autiomatique'),
+    (default, 'Automatique'),
     (default, 'Manuel'),
     (default, 'Semi-Automatique');
 
@@ -90,4 +90,4 @@ insert into
                 id_nombre_places)
 values
     (NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-    (NULL, 2, 1, 2, 2, 2, 1, 2, 2, 2);
+    (NULL, 2, 2, 2, 2, 2, 1, 2, 2, 2);

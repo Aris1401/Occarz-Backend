@@ -1,12 +1,11 @@
 package com.occarz.end.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.occarz.end.dto.ResultatFiltreAnnonce;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.occarz.end.dto.FiltreAnnonce;
 import com.occarz.end.dto.RestResponse;
@@ -21,7 +20,14 @@ public class AnnonceController {
     private AnnonceService annonceService;
 
     @GetMapping("")    
-    public RestResponse<List<Annonce>> obtenirAnnonces(@RequestBody FiltreAnnonce filtreAnnonce) {
-        return new RestResponse<List<Annonce>>(annonceService.filtrerAnnonces(filtreAnnonce));
+    public RestResponse<ResultatFiltreAnnonce> obtenirAnnonces(@RequestBody FiltreAnnonce filtreAnnonce) {
+        return new RestResponse<ResultatFiltreAnnonce>(new ResultatFiltreAnnonce(filtreAnnonce, (ArrayList<Annonce>) annonceService.filtrerAnnonces(filtreAnnonce)));
+    }
+
+    @GetMapping("/")
+    public RestResponse<ResultatFiltreAnnonce> obtenirAnnonceTrier(@RequestBody FiltreAnnonce filtreAnnonce,
+                                                                   @RequestParam("order") String ordre,
+                                                                   @RequestParam("field") String field)  {
+        return new RestResponse<ResultatFiltreAnnonce>(new ResultatFiltreAnnonce(filtreAnnonce, (ArrayList<Annonce>) annonceService.trierAnnonce(filtreAnnonce, ordre, field)));
     }
 }

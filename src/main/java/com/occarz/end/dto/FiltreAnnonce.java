@@ -47,8 +47,10 @@ public class FiltreAnnonce {
     public ArrayList<Marque> getMarques() {
         ArrayList<Marque> marques = new ArrayList<>();
 
-        for (Vehicule vehicule : vehicules) {
-            marques.add(vehicule.getMarque());
+        if (vehicules != null) {
+            for (Vehicule vehicule : vehicules) {
+                marques.add(vehicule.getMarque());
+            }
         }
 
         return marques;
@@ -57,8 +59,10 @@ public class FiltreAnnonce {
     public ArrayList<Modele> getModeles() {
         ArrayList<Modele> modeles = new ArrayList<>();
 
-        for (Vehicule vehicule : vehicules) {
-            modeles.add(vehicule.getModele());
+        if (vehicules != null) {
+            for (Vehicule vehicule : vehicules) {
+                modeles.add(vehicule.getModele());
+            }
         }
 
         return modeles;
