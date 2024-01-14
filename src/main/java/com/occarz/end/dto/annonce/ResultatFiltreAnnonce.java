@@ -1,4 +1,4 @@
-package com.occarz.end.dto;
+package com.occarz.end.dto.annonce;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,6 @@ import com.occarz.end.entities.annonce.Annonce;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @AllArgsConstructor

@@ -1,16 +1,14 @@
 package com.occarz.end.controllers;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import com.occarz.end.dto.ResultatFiltreAnnonce;
+import com.occarz.end.dto.annonce.ResultatFiltreAnnonce;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.occarz.end.dto.FiltreAnnonce;
-import com.occarz.end.dto.RestResponse;
+import com.occarz.end.dto.annonce.FiltreAnnonce;
+import com.occarz.end.dto.response.RestResponse;
 import com.occarz.end.entities.annonce.Annonce;
-import com.occarz.end.repository.AnnonceRepository;
 import com.occarz.end.services.annonces.AnnonceService;
 
 @RestController
