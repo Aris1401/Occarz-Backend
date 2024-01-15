@@ -7,11 +7,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.util.ArrayUtils;
 
-import com.occarz.end.dto.FiltreAnnonce;
+import com.occarz.end.dto.annonce.FiltreAnnonce;
 import com.occarz.end.entities.annonce.Annonce;
-import com.occarz.end.entities.annonce.SousAnnonce;
 import com.occarz.end.entities.user.Utilisateur;
 import com.occarz.end.entities.vehicule.BoiteDeVitesse;
 import com.occarz.end.entities.vehicule.Carburant;

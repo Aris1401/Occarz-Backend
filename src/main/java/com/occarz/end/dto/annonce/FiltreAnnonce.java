@@ -1,4 +1,4 @@
-package com.occarz.end.dto;
+package com.occarz.end.dto.annonce;
 
 import java.util.ArrayList;
 import java.util.Date;
