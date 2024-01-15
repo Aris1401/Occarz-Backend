@@ -1,5 +1,6 @@
 package com.occarz.end.security;
 
+import com.occarz.end.entities.user.Utilisateur;
 import com.occarz.end.security.jwt.AuthEntryPointJwt;
 import com.occarz.end.security.jwt.AuthTokenFilter;
 import com.occarz.end.security.services.UserDetailsServiceImpl;
@@ -63,6 +64,7 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                     auth.requestMatchers("/api/v1/auth/**").permitAll()
+                            .requestMatchers("/api/v1/admin/**").hasRole(Utilisateur.RoleUtilisateur.ADMIN.name())
                             .anyRequest().authenticated()
                 );
 
