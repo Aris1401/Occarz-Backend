@@ -8,10 +8,13 @@ import com.occarz.end.entities.vehicule.*;
 import com.occarz.end.repository.user.UtilisateurRepository;
 import com.occarz.end.repository.voiture.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -106,7 +109,7 @@ public class FiltreAnnonceService {
             return etatVehiculeRepository.findById(etat).get();
         }).collect(Collectors.toList()));
 
-        filtreAnnonce.setStatusAnnonce(Annonce.AnnonceState.getStateFrom(requete.getStatusAnnonce()));
+        filtreAnnonce.setStatusAnnonce(Annonce.AnnonceState.fromInt(requete.getStatusAnnonce()));
 
         return filtreAnnonce;
     }

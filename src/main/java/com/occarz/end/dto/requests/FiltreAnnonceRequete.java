@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class FiltreAnnonceRequete {
@@ -20,13 +21,13 @@ public class FiltreAnnonceRequete {
     double prixMaximum = -1;
 
     // Categorie
-    ArrayList<VehiculeRequete> vehicules;
-    ArrayList<Integer> boiteDeVitesses;
-    ArrayList<Integer> carburants;
-    ArrayList<Integer> categoriesVehicule;
-    ArrayList<Integer> places;
-    ArrayList<Integer> couleurVehicules;
-    ArrayList<Integer> etatVehicules;
+    List<VehiculeRequete> vehicules;
+    List<Integer> boiteDeVitesses;
+    List<Integer> carburants;
+    List<Integer> categoriesVehicule;
+    List<Integer> places;
+    List<Integer> couleurVehicules;
+    List<Integer> etatVehicules;
 
-    int statusAnnonce = -1;
+    int statusAnnonce = Annonce.AnnonceState.DISPONIBLE.ordinal();
 }

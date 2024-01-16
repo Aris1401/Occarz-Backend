@@ -1,4 +1,4 @@
-package com.occarz.end.repository;
+package com.occarz.end.repository.annonce;
 
 import java.util.Date;
 import java.util.List;

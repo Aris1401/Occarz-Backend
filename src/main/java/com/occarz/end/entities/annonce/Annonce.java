@@ -22,18 +22,14 @@ public class Annonce implements Serializable {
         VENDU,
         SUPPRIMER;
 
-        public static AnnonceState getStateFrom(int value) {
-            switch (value) {
-                case 2 -> {
-                    return DISPONIBLE;
-                } case 3 -> {
-                    return VENDU;
-                } case 4 -> {
-                    return SUPPRIMER;
-                } default -> {
-                    return EN_ATTENTE;
-                }
-            }
+        public static AnnonceState fromInt(int value) {
+            return switch (value) {
+                case 0 -> EN_ATTENTE;
+                case 1 -> DISPONIBLE;
+                case 2 -> VENDU;
+                case 3 -> SUPPRIMER;
+                default -> throw new IllegalArgumentException("Invalid integer value for AnnonceState: " + value);
+            };
         }
     }
 

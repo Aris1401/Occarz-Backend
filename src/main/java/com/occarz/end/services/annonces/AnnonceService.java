@@ -5,15 +5,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.occarz.end.entities.annonce.AnnonceFavoris;
 import com.occarz.end.entities.vehicule.*;
+import com.occarz.end.repository.annonce.AnnonceFavorisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.occarz.end.dto.annonce.FiltreAnnonce;
 import com.occarz.end.entities.annonce.Annonce;
 import com.occarz.end.entities.user.Utilisateur;
-import com.occarz.end.repository.AnnonceRepository;
-import com.occarz.end.repository.SousAnnonceRepository;
+import com.occarz.end.repository.annonce.AnnonceRepository;
+import com.occarz.end.repository.annonce.SousAnnonceRepository;
 
 @Service
 public class AnnonceService {
@@ -22,6 +24,9 @@ public class AnnonceService {
 
     @Autowired
     private SousAnnonceRepository sousAnnonceRepository;
+
+    @Autowired
+    private AnnonceFavorisRepository annonceFavorisRepository;
 
     // Utils
     void innerJoinAnnonceResults(ArrayList<Annonce> annonces, ArrayList<Annonce> resultats) {
