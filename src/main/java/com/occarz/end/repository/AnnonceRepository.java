@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.occarz.end.entities.annonce.Annonce;
 import com.occarz.end.entities.user.Utilisateur;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface AnnonceRepository extends JpaRepository<Annonce, Integer>, CrudRepository<Annonce, Integer>, PagingAndSortingRepository<Annonce, Integer> {
@@ -33,4 +35,10 @@ public interface AnnonceRepository extends JpaRepository<Annonce, Integer>, Crud
     public List<Annonce> findByPrixBetween(double from, double to);
     public List<Annonce> findByPrixGreaterThanEqual(double from);
     public List<Annonce> findByPrixLessThanEqual(double to);
+
+    // Mettre a jour annonce
+    @Modifying
+    @Transactional
+    @Query("update Annonce set etat = ?2 where id = ?1")
+    public int updateStatusAnnonce(int idAnnonce, Annonce.AnnonceState annonceState);
 }

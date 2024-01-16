@@ -64,8 +64,8 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                     auth.requestMatchers("/api/v1/auth/**").permitAll()
-                            .requestMatchers("/api/v1/admin/**").hasRole(Utilisateur.RoleUtilisateur.ADMIN.name())
-                            .anyRequest().authenticated()
+                        .requestMatchers("/api/v1/admin/**").hasAuthority(Utilisateur.RoleUtilisateur.ADMIN.name())
+                        .anyRequest().authenticated()
                 );
 
         http.authenticationProvider(authenticationProvider());

@@ -5,15 +5,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.occarz.end.entities.vehicule.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.occarz.end.dto.annonce.FiltreAnnonce;
 import com.occarz.end.entities.annonce.Annonce;
 import com.occarz.end.entities.user.Utilisateur;
-import com.occarz.end.entities.vehicule.BoiteDeVitesse;
-import com.occarz.end.entities.vehicule.Carburant;
-import com.occarz.end.entities.vehicule.CategorieVehicule;
 import com.occarz.end.repository.AnnonceRepository;
 import com.occarz.end.repository.SousAnnonceRepository;
 
@@ -118,8 +116,50 @@ public class AnnonceService {
                 return !contains;
             });
         }
-        return annonces;
 
+        // Nombre places
+        if (filtreAnnonce.getPlaces() != null) {
+            annonces.removeIf(annonce -> {
+                boolean contains = false;
+
+                for (NombrePlaces places : filtreAnnonce.getPlaces()) {
+                    if (annonce.getPlaces().contains(places)) contains = true;
+                }
+
+                return !contains;
+            });
+        }
+
+        // Couleur vehicules
+        if (filtreAnnonce.getCouleurVehicules() != null) {
+            annonces.removeIf(annonce -> {
+                boolean contains = false;
+
+                for (CouleurVehicule couleurVehicule : filtreAnnonce.getCouleurVehicules()) {
+                    if (annonce.getCouleursVehicule().contains(couleurVehicule)) contains = true;
+                }
+
+                return !contains;
+            });
+        }
+
+        // Etat vehicules
+        if (filtreAnnonce.getEtatVehicules() != null) {
+            annonces.removeIf(annonce -> {
+                boolean contains = false;
+
+                for (EtatVehicule etat : filtreAnnonce.getEtatVehicules()) {
+                    if (annonce.getEtatVehicules().contains(etat)) contains = true;
+                }
+
+                return !contains;
+            });
+        }
+
+        // Filtre status annonces
+        annonces.removeIf(annonce -> annonce.getEtat() != filtreAnnonce.getStatusAnnonce());
+
+        return annonces;
     }
 
     public ArrayList<Annonce> annoncesForUtilisateur(Utilisateur utilisateur) {
@@ -162,5 +202,10 @@ public class AnnonceService {
         }
 
         return annonces;
+    }
+
+    // Mettre a jour une annonce
+    public int validerAnnonce(int idAnnonce) {
+        return annonceRepository.updateStatusAnnonce(idAnnonce, Annonce.AnnonceState.DISPONIBLE);
     }
 }
