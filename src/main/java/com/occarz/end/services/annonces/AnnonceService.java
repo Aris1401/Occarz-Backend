@@ -1,14 +1,15 @@
 package com.occarz.end.services.annonces;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import com.occarz.end.entities.annonce.AnnonceFavoris;
 import com.occarz.end.entities.vehicule.*;
 import com.occarz.end.repository.annonce.AnnonceFavorisRepository;
+import com.occarz.end.repository.user.UtilisateurRepository;
+import com.occarz.end.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.occarz.end.dto.annonce.FiltreAnnonce;
@@ -28,6 +29,9 @@ public class AnnonceService {
     @Autowired
     private AnnonceFavorisRepository annonceFavorisRepository;
 
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
+
     // Utils
     void innerJoinAnnonceResults(ArrayList<Annonce> annonces, ArrayList<Annonce> resultats) {
         if (annonces.isEmpty()) annonces.addAll(resultats);
@@ -35,6 +39,7 @@ public class AnnonceService {
             else annonces.retainAll(resultats);
     }
 
+    // Filtrer annonces
     public ArrayList<Annonce> filtrerAnnonces(FiltreAnnonce filtreAnnonce) {
         // Si il ya aucun filtre
         if (filtreAnnonce == null) return (ArrayList<Annonce>) annonceRepository.findAll();
@@ -167,19 +172,11 @@ public class AnnonceService {
         return annonces;
     }
 
-    public ArrayList<Annonce> annoncesForUtilisateur(Utilisateur utilisateur) {
-        // Creer un filtre
-        FiltreAnnonce filtreAnnonce = new FiltreAnnonce();
-        filtreAnnonce.setUtilisateur(utilisateur);
-
-        return filtrerAnnonces(filtreAnnonce);
+    public List<Annonce> trierAnnonceParFiltre(FiltreAnnonce filtres, String order, String field) {
+        return trierAnnonce(filtrerAnnonces(filtres), order, field);
     }
-
     // Trier annonces
-    public List<Annonce> trierAnnonce(FiltreAnnonce filtres, String ordre, String field) {
-        // Annonces filtrer
-        List<Annonce> annonces = filtrerAnnonces(filtres);
-
+    public List<Annonce> trierAnnonce(ArrayList<Annonce> annonces, String ordre, String field) {
         switch (field) {
             case "date" -> {
                 annonces.sort((annonce1, annonce2) -> {
@@ -212,5 +209,32 @@ public class AnnonceService {
     // Mettre a jour une annonce
     public int validerAnnonce(int idAnnonce) {
         return annonceRepository.updateStatusAnnonce(idAnnonce, Annonce.AnnonceState.DISPONIBLE);
+    }
+
+    // Ajout annonce aux favoris
+    public void ajouterAnnonceAuxFavoris(int idAnnonce) {
+        UserDetailsImpl utilisateur = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Obtenir l'utilisateur
+        Annonce annonce = annonceRepository.findById(idAnnonce).get();
+        Utilisateur user = utilisateurRepository.findById(utilisateur.getPublicUserInformation().getId()).get();
+
+        // Creation d'annonce favoris pour utilisateur
+        AnnonceFavoris annonceFavoris = new AnnonceFavoris();
+        annonceFavoris.setAnnonce(annonce);
+        annonceFavoris.setUtilisateur(user);
+        annonceFavoris.setDateFavoris(new Date());
+
+        annonceFavorisRepository.save(annonceFavoris);
+    }
+
+    // Liste des annonces favoris de l'utilisateur connecter
+    public ArrayList<AnnonceFavoris> annoncesFavoris() {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Utilisateur utilisateur = utilisateurRepository.findById(userDetails.getPublicUserInformation().getId()).get();
+
+        // Obtenir les annonces favories
+        return (ArrayList<AnnonceFavoris>) annonceFavorisRepository.findByUtilisateur(utilisateur);
     }
 }

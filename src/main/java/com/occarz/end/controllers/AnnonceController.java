@@ -1,9 +1,12 @@
 package com.occarz.end.controllers;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.occarz.end.dto.annonce.ResultatFiltreAnnonce;
 import com.occarz.end.dto.requests.FiltreAnnonceRequete;
+import com.occarz.end.entities.annonce.AnnonceFavoris;
 import com.occarz.end.security.services.UserDetailsImpl;
 import com.occarz.end.services.annonces.FiltreAnnonceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +40,39 @@ public class AnnonceController {
                                                                    @RequestParam("ordre") String ordre,
                                                                    @RequestParam("field") String field)  {
         FiltreAnnonce filtre = filtreAnnonceService.build(filtreAnnonce);
-        return new RestResponse<ResultatFiltreAnnonce>(new ResultatFiltreAnnonce(filtre, (ArrayList<Annonce>) annonceService.trierAnnonce(filtre, ordre, field)));
+        return new RestResponse<ResultatFiltreAnnonce>(new ResultatFiltreAnnonce(filtre, (ArrayList<Annonce>) annonceService.trierAnnonceParFiltre(filtre, ordre, field)));
+    }
+
+    @PostMapping("/annonces/favoris/{id}")
+    public RestResponse<String> ajouterAnnonceAuxFavoris(@PathVariable("id") int idAnnonce) {
+        annonceService.ajouterAnnonceAuxFavoris(idAnnonce);
+
+        return new RestResponse<>("Annonce ajouter aux favoris");
+    }
+
+    @GetMapping("/annonces/favoris")
+    public RestResponse<ResultatFiltreAnnonce> listeDesFavoris(@RequestBody FiltreAnnonceRequete filtreAnnonceRequete) {
+        ArrayList<AnnonceFavoris> annonceFavorises = annonceService.annoncesFavoris();
+
+        // Obtenir les annonces en elles-memes
+        List<Annonce> annonces = annonceFavorises.stream()
+                .map(favoris -> {
+                    Annonce annonce = favoris.getAnnonce();
+                    annonce.setDateAnnonce(favoris.getDateFavoris());
+
+                    return annonce;
+                })
+                .collect(Collectors.toList());
+
+        // Filtre
+        FiltreAnnonce filtreAnnonce = filtreAnnonceService.build(filtreAnnonceRequete);
+        ArrayList<Annonce> annoncesFiltered = annonceService.filtrerAnnonces(filtreAnnonce);
+
+        annoncesFiltered.retainAll(annonces);
+
+        // Resultats filtre
+        ResultatFiltreAnnonce resultatFiltreAnnonce = new ResultatFiltreAnnonce(filtreAnnonce, annoncesFiltered);
+        return new RestResponse<>(resultatFiltreAnnonce);
     }
 
     // Back office (ADMIN)
@@ -69,12 +104,12 @@ public class AnnonceController {
         // Build annonce
         FiltreAnnonce filtre = filtreAnnonceService.build(filtreAnnonce);
 
-        ResultatFiltreAnnonce resultatFiltreAnnonce = new ResultatFiltreAnnonce(filtre, (ArrayList<Annonce>) annonceService.trierAnnonce(filtre, ordre, field));
+        ResultatFiltreAnnonce resultatFiltreAnnonce = new ResultatFiltreAnnonce(filtre, (ArrayList<Annonce>) annonceService.trierAnnonceParFiltre(filtre, ordre, field));
 
         return new RestResponse<ResultatFiltreAnnonce>(resultatFiltreAnnonce);
     }
 
-    @GetMapping("/admin/annonces/valider/{id}")
+    @PostMapping("/admin/annonces/valider/{id}")
     public RestResponse<String> validerAnnonce(@PathVariable("id") int idAnnonce) {
         annonceService.validerAnnonce(idAnnonce);
 

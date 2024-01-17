@@ -13,11 +13,11 @@ public class AnnonceFavoris {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "id_annonce")
     Annonce annonce;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "id_utilisateur")
     Utilisateur utilisateur;
 
