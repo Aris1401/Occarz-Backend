@@ -75,6 +75,35 @@ public class AnnonceController {
         return new RestResponse<>(resultatFiltreAnnonce);
     }
 
+    @GetMapping(value = "/annonces/favoris", params = {"ordre", "field"})
+    public RestResponse<ResultatFiltreAnnonce> listeDesFavorisTrier(@RequestBody FiltreAnnonceRequete filtreAnnonceRequete,
+                                                               @RequestParam("ordre") String ordre,
+                                                               @RequestParam("field") String field) {
+        ArrayList<AnnonceFavoris> annonceFavorises = annonceService.annoncesFavoris();
+
+        // Obtenir les annonces en elles-memes
+        List<Annonce> annonces = annonceFavorises.stream()
+                .map(favoris -> {
+                    Annonce annonce = favoris.getAnnonce();
+                    annonce.setDateAnnonce(favoris.getDateFavoris());
+
+                    return annonce;
+                })
+                .collect(Collectors.toList());
+
+        // Filtre
+        FiltreAnnonce filtreAnnonce = filtreAnnonceService.build(filtreAnnonceRequete);
+        ArrayList<Annonce> annoncesFiltered = annonceService.filtrerAnnonces(filtreAnnonce);
+
+        annoncesFiltered.retainAll(annonces);
+
+        // Resultats filtre
+        ResultatFiltreAnnonce resultatFiltreAnnonce = new ResultatFiltreAnnonce(filtreAnnonce, (ArrayList<Annonce>) annonceService.trierAnnonce(annoncesFiltered, ordre, field));
+        return new RestResponse<>(resultatFiltreAnnonce);
+    }
+
+
+
     // Back office (ADMIN)
     @GetMapping("/admin/annonces")
     public RestResponse<ResultatFiltreAnnonce> annoncesEnAttenteDeValidation() {
