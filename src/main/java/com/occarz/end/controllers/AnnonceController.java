@@ -102,7 +102,10 @@ public class AnnonceController {
         return new RestResponse<>(resultatFiltreAnnonce);
     }
 
-
+    @DeleteMapping("/annonces/favoris/{id}")
+    public void enleverAnnonceDesFavoris(@RequestParam("id") int idAnnonce) {
+        annonceService.enleverAnnonceDesFavoris(idAnnonce);
+    }
 
     // Back office (ADMIN)
     @GetMapping("/admin/annonces")

@@ -228,6 +228,18 @@ public class AnnonceService {
         annonceFavorisRepository.save(annonceFavoris);
     }
 
+    // Enlever annonces des favoris
+    public void enleverAnnonceDesFavoris(int idAnnonce) {
+        UserDetailsImpl utilisateur = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Obtenir l'utilisateur
+        Annonce annonce = annonceRepository.findById(idAnnonce).get();
+        Utilisateur user = utilisateurRepository.findById(utilisateur.getPublicUserInformation().getId()).get();
+
+        // Enlever annonce des favoris
+        annonceFavorisRepository.deleteByAnnonceAndUtilisateur(annonce, user);
+    }
+
     // Liste des annonces favoris de l'utilisateur connecter
     public ArrayList<AnnonceFavoris> annoncesFavoris() {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
