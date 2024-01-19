@@ -103,7 +103,7 @@ public class AnnonceController {
     }
 
     @DeleteMapping("/annonces/favoris/{id}")
-    public void enleverAnnonceDesFavoris(@RequestParam("id") int idAnnonce) {
+    public void enleverAnnonceDesFavoris(@PathVariable("id") int idAnnonce) {
         annonceService.enleverAnnonceDesFavoris(idAnnonce);
     }
 
