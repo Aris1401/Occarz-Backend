@@ -38,7 +38,7 @@ public class FiltreAnnonce {
     ArrayList<CouleurVehicule> couleurVehicules;
     ArrayList<EtatVehicule> etatVehicules;
 
-    AnnonceState statusAnnonce;
+    AnnonceState statusAnnonce = AnnonceState.DISPONIBLE;
 
     public String getMotCle() {
         return this.motCle == null ? null : this.motCle.toLowerCase();

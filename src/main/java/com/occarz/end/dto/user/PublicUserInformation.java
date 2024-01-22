@@ -1,4 +1,4 @@
-package com.occarz.end.dto;
+package com.occarz.end.dto.user;
 
 import com.occarz.end.entities.user.Genre;
 import com.occarz.end.entities.user.Utilisateur;

@@ -2,6 +2,7 @@ package com.occarz.end.entities.user;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +29,7 @@ public class Utilisateur {
     @JoinColumn(name = "id_genre")
     Genre genre;
     String email;
+    @JsonIgnore
     String motDePasse;
     String contact;
     String photoProfil;

@@ -1,21 +1,22 @@
 package com.occarz.end.services.annonces;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
+import com.occarz.end.entities.annonce.AnnonceFavoris;
+import com.occarz.end.entities.vehicule.*;
+import com.occarz.end.repository.annonce.AnnonceFavorisRepository;
+import com.occarz.end.repository.user.UtilisateurRepository;
+import com.occarz.end.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.occarz.end.dto.annonce.FiltreAnnonce;
 import com.occarz.end.entities.annonce.Annonce;
 import com.occarz.end.entities.user.Utilisateur;
-import com.occarz.end.entities.vehicule.BoiteDeVitesse;
-import com.occarz.end.entities.vehicule.Carburant;
-import com.occarz.end.entities.vehicule.CategorieVehicule;
-import com.occarz.end.repository.AnnonceRepository;
-import com.occarz.end.repository.SousAnnonceRepository;
+import com.occarz.end.repository.annonce.AnnonceRepository;
+import com.occarz.end.repository.annonce.SousAnnonceRepository;
 
 @Service
 public class AnnonceService {
@@ -25,6 +26,22 @@ public class AnnonceService {
     @Autowired
     private SousAnnonceRepository sousAnnonceRepository;
 
+    @Autowired
+    private AnnonceFavorisRepository annonceFavorisRepository;
+
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
+
+    // Mettre a jour le status d'une annonce
+    public void updateAnnonceStatus(int idAnnonce, Annonce.AnnonceState state) {
+        annonceRepository.updateStatusAnnonce(idAnnonce, state);
+    }
+
+    // Obtenir annonce par id
+    public Annonce findById(int idAnnonce) {
+        return annonceRepository.findById(idAnnonce).get();
+    }
+
     // Utils
     void innerJoinAnnonceResults(ArrayList<Annonce> annonces, ArrayList<Annonce> resultats) {
         if (annonces.isEmpty()) annonces.addAll(resultats);
@@ -32,6 +49,7 @@ public class AnnonceService {
             else annonces.retainAll(resultats);
     }
 
+    // Filtrer annonces
     public ArrayList<Annonce> filtrerAnnonces(FiltreAnnonce filtreAnnonce) {
         // Si il ya aucun filtre
         if (filtreAnnonce == null) return (ArrayList<Annonce>) annonceRepository.findAll();
@@ -118,23 +136,57 @@ public class AnnonceService {
                 return !contains;
             });
         }
+
+        // Nombre places
+        if (filtreAnnonce.getPlaces() != null) {
+            annonces.removeIf(annonce -> {
+                boolean contains = false;
+
+                for (NombrePlaces places : filtreAnnonce.getPlaces()) {
+                    if (annonce.getPlaces().contains(places)) contains = true;
+                }
+
+                return !contains;
+            });
+        }
+
+        // Couleur vehicules
+        if (filtreAnnonce.getCouleurVehicules() != null) {
+            annonces.removeIf(annonce -> {
+                boolean contains = false;
+
+                for (CouleurVehicule couleurVehicule : filtreAnnonce.getCouleurVehicules()) {
+                    if (annonce.getCouleursVehicule().contains(couleurVehicule)) contains = true;
+                }
+
+                return !contains;
+            });
+        }
+
+        // Etat vehicules
+        if (filtreAnnonce.getEtatVehicules() != null) {
+            annonces.removeIf(annonce -> {
+                boolean contains = false;
+
+                for (EtatVehicule etat : filtreAnnonce.getEtatVehicules()) {
+                    if (annonce.getEtatVehicules().contains(etat)) contains = true;
+                }
+
+                return !contains;
+            });
+        }
+
+        // Filtre status annonces
+        annonces.removeIf(annonce -> annonce.getEtat() != filtreAnnonce.getStatusAnnonce());
+
         return annonces;
-
     }
 
-    public ArrayList<Annonce> annoncesForUtilisateur(Utilisateur utilisateur) {
-        // Creer un filtre
-        FiltreAnnonce filtreAnnonce = new FiltreAnnonce();
-        filtreAnnonce.setUtilisateur(utilisateur);
-
-        return filtrerAnnonces(filtreAnnonce);
+    public List<Annonce> trierAnnonceParFiltre(FiltreAnnonce filtres, String order, String field) {
+        return trierAnnonce(filtrerAnnonces(filtres), order, field);
     }
-
     // Trier annonces
-    public List<Annonce> trierAnnonce(FiltreAnnonce filtres, String ordre, String field) {
-        // Annonces filtrer
-        List<Annonce> annonces = filtrerAnnonces(filtres);
-
+    public List<Annonce> trierAnnonce(ArrayList<Annonce> annonces, String ordre, String field) {
         switch (field) {
             case "date" -> {
                 annonces.sort((annonce1, annonce2) -> {
@@ -162,5 +214,49 @@ public class AnnonceService {
         }
 
         return annonces;
+    }
+
+    // Mettre a jour une annonce
+    public int validerAnnonce(int idAnnonce) {
+        return annonceRepository.updateStatusAnnonce(idAnnonce, Annonce.AnnonceState.DISPONIBLE);
+    }
+
+    // Ajout annonce aux favoris
+    public void ajouterAnnonceAuxFavoris(int idAnnonce) {
+        UserDetailsImpl utilisateur = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Obtenir l'utilisateur
+        Annonce annonce = annonceRepository.findById(idAnnonce).get();
+        Utilisateur user = utilisateurRepository.findById(utilisateur.getPublicUserInformation().getId()).get();
+
+        // Creation d'annonce favoris pour utilisateur
+        AnnonceFavoris annonceFavoris = new AnnonceFavoris();
+        annonceFavoris.setAnnonce(annonce);
+        annonceFavoris.setUtilisateur(user);
+        annonceFavoris.setDateFavoris(new Date());
+
+        annonceFavorisRepository.save(annonceFavoris);
+    }
+
+    // Enlever annonces des favoris
+    public void enleverAnnonceDesFavoris(int idAnnonce) {
+        UserDetailsImpl utilisateur = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Obtenir l'utilisateur
+        Annonce annonce = annonceRepository.findById(idAnnonce).get();
+        Utilisateur user = utilisateurRepository.findById(utilisateur.getPublicUserInformation().getId()).get();
+
+        // Enlever annonce des favoris
+        annonceFavorisRepository.deleteByAnnonceAndUtilisateur(annonce, user);
+    }
+
+    // Liste des annonces favoris de l'utilisateur connecter
+    public ArrayList<AnnonceFavoris> annoncesFavoris() {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Utilisateur utilisateur = utilisateurRepository.findById(userDetails.getPublicUserInformation().getId()).get();
+
+        // Obtenir les annonces favories
+        return (ArrayList<AnnonceFavoris>) annonceFavorisRepository.findByUtilisateur(utilisateur);
     }
 }

@@ -1,17 +1,12 @@
 package com.occarz.end.entities.annonce;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.occarz.end.dto.PublicUserInformation;
+import com.occarz.end.dto.user.PublicUserInformation;
 import com.occarz.end.entities.user.Utilisateur;
-import com.occarz.end.entities.vehicule.BoiteDeVitesse;
-import com.occarz.end.entities.vehicule.Carburant;
-import com.occarz.end.entities.vehicule.CategorieVehicule;
+import com.occarz.end.entities.vehicule.*;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -19,12 +14,23 @@ import lombok.Data;
 @Data
 @Entity
 public class Annonce implements Serializable {
+
     // Etats annonces
     public enum AnnonceState {
         EN_ATTENTE,
         DISPONIBLE, 
         VENDU,
-        SUPPRIMER
+        SUPPRIMER;
+
+        public static AnnonceState fromInt(int value) {
+            return switch (value) {
+                case 0 -> EN_ATTENTE;
+                case 1 -> DISPONIBLE;
+                case 2 -> VENDU;
+                case 3 -> SUPPRIMER;
+                default -> throw new IllegalArgumentException("Invalid integer value for AnnonceState: " + value);
+            };
+        }
     }
 
     @Id
@@ -34,6 +40,8 @@ public class Annonce implements Serializable {
     String description;
     Date dateAnnonce;
     double prix;
+
+    @Enumerated(EnumType.ORDINAL)
     AnnonceState etat;
     
     @ManyToOne
@@ -73,6 +81,36 @@ public class Annonce implements Serializable {
         }
 
         return categorieVehicules;
+    }
+
+    public ArrayList<NombrePlaces> getPlaces() {
+        ArrayList<NombrePlaces> places = new ArrayList<>();
+
+        for (SousAnnonce sousAnnonce : getSousAnnonces()) {
+            places.add(sousAnnonce.getPlaces());
+        }
+
+        return places;
+    }
+
+    public ArrayList<CouleurVehicule> getCouleursVehicule() {
+        ArrayList<CouleurVehicule> couleurVehicules = new ArrayList<>();
+
+        for (SousAnnonce sousAnnonce : getSousAnnonces()) {
+            couleurVehicules.add(sousAnnonce.getCouleurVehicule());
+        }
+
+        return couleurVehicules;
+    }
+
+    public ArrayList<EtatVehicule> getEtatVehicules() {
+        ArrayList<EtatVehicule> etatVehicules = new ArrayList<>();
+
+        for (SousAnnonce sousAnnonce : getSousAnnonces()) {
+            etatVehicules.add(sousAnnonce.getEtatVehicule());
+        }
+
+        return etatVehicules;
     }
 
     // Informations utilisateur
