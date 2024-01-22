@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.occarz.end.dto.PublicUserInformation;
+import com.occarz.end.dto.user.PublicUserInformation;
 import com.occarz.end.entities.user.Utilisateur;
 import com.occarz.end.entities.vehicule.*;
 

@@ -32,6 +32,16 @@ public class AnnonceService {
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
+    // Mettre a jour le status d'une annonce
+    public void updateAnnonceStatus(int idAnnonce, Annonce.AnnonceState state) {
+        annonceRepository.updateStatusAnnonce(idAnnonce, state);
+    }
+
+    // Obtenir annonce par id
+    public Annonce findById(int idAnnonce) {
+        return annonceRepository.findById(idAnnonce).get();
+    }
+
     // Utils
     void innerJoinAnnonceResults(ArrayList<Annonce> annonces, ArrayList<Annonce> resultats) {
         if (annonces.isEmpty()) annonces.addAll(resultats);

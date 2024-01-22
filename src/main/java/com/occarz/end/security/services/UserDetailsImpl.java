@@ -1,7 +1,7 @@
 package com.occarz.end.security.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.occarz.end.dto.PublicUserInformation;
+import com.occarz.end.dto.user.PublicUserInformation;
 import com.occarz.end.entities.user.Utilisateur;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
