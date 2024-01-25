@@ -19,4 +19,8 @@ public class UtilisateurService {
     public Utilisateur obtenirUtilisateurConnecter() {
         return utilisateurRepository.findById(obtenirDetailsUtilisateurConnecter().getPublicUserInformation().getId()).get();
     }
+
+    public Utilisateur findById(int idUtilisateur) {
+        return utilisateurRepository.findById(idUtilisateur).get();
+    }
 }
