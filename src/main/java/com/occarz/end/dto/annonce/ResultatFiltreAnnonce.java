@@ -42,7 +42,21 @@ public class ResultatFiltreAnnonce {
             filtres.add(carburant.getNom());
         }
 
-        for (CategorieVehicule categorieVehicule : )
+        for (CategorieVehicule categorieVehicule : getFiltres().getCategoriesVehicule()) {
+            filtres.add(categorieVehicule.getNom());
+        }
+
+        for (NombrePlaces nombrePlaces : getFiltres().getPlaces()) {
+            filtres.add(nombrePlaces.getNombre());
+        }
+
+        for (CouleurVehicule couleurVehicule : getFiltres().getCouleurVehicules()) {
+            filtres.add(couleurVehicule.getCouleur());
+        }
+
+        for (EtatVehicule etatVehicule : getFiltres().getEtatVehicules()) {
+            filtres.add(etatVehicule.getNom());
+        }
 
         return filtres;
     }
