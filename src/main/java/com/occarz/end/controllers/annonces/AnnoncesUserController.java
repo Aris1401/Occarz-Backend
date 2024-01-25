@@ -2,6 +2,7 @@ package com.occarz.end.controllers.annonces;
 
 import com.occarz.end.dto.annonce.FiltreAnnonce;
 import com.occarz.end.dto.annonce.ResultatFiltreAnnonce;
+import com.occarz.end.dto.requests.AjoutAnnonceRequete;
 import com.occarz.end.dto.requests.FiltreAnnonceRequete;
 import com.occarz.end.dto.response.RestResponse;
 import com.occarz.end.entities.annonce.Annonce;
@@ -120,5 +121,10 @@ public class AnnoncesUserController {
         ArrayList<Annonce> annonces = annonceService.filtrerAnnonces(filtreAnnonce);
         annonces = (ArrayList<Annonce>) annonceService.trierAnnonce(annonces, ordre, field);
         return new RestResponse<>(annonces);
+    }
+
+    @PostMapping("")
+    public RestResponse<Annonce> ajouterAnnonce(@RequestBody AjoutAnnonceRequete ajoutAnnonceRequete) {
+        return new RestResponse<>(annonceService.ajouterAnnonce(ajoutAnnonceRequete));
     }
 }
