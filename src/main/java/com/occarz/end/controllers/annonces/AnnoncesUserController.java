@@ -50,6 +50,20 @@ public class AnnoncesUserController {
         return new RestResponse<>(resultatFiltreAnnonce);
     }
 
+    @GetMapping("/attentes")
+    public RestResponse<ResultatFiltreAnnonce> mesAnnoncesEnAttente(@RequestBody FiltreAnnonceRequete filtres) {
+        // Produire le filtre des annonces
+        FiltreAnnonce filtreAnnonce = filtreAnnonceService.build(filtres);
+        filtreAnnonce.setStatusAnnonce(Annonce.AnnonceState.EN_ATTENTE);
+
+        // Ajouter l'utilsateur
+        filtreAnnonce.setUtilisateur(utilisateurService.obtenirUtilisateurConnecter());
+
+        // Resutlats
+        ResultatFiltreAnnonce resultatFiltreAnnonce = new ResultatFiltreAnnonce(filtreAnnonce, annonceService.filtrerAnnonces(filtreAnnonce));
+        return new RestResponse<>(resultatFiltreAnnonce);
+    }
+
     @GetMapping(value = "", params = {"ordre", "field"})
     public RestResponse<ResultatFiltreAnnonce> mesAnnoncesTrier(@RequestBody FiltreAnnonceRequete filtres,
                                                                 @RequestParam("order") String ordre,
@@ -65,7 +79,7 @@ public class AnnoncesUserController {
     }
 
     // Marquer une annonces comme vendue
-    @PostMapping("/vendue/{id}")
+    @PostMapping("/{id}/vendu")
     public RestResponse<String> marquerAnnonceVendue(@PathVariable("id") int idAnnonce) {
         // Obtenir l'annonce voulu
         Annonce annonce = annonceService.findById(idAnnonce);

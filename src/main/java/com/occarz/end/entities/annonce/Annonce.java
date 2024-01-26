@@ -50,7 +50,7 @@ public class Annonce implements Serializable {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "annonce", fetch = FetchType.LAZY)
-    List<SousAnnonce> sousAnnonces;
+    List<SousAnnonce> sousAnnonces = new ArrayList<>();
 
     // Boite de vitesse
     public ArrayList<BoiteDeVitesse> getBoiteDeVitesses() {

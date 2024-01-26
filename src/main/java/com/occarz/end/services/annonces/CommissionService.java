@@ -24,6 +24,7 @@ public class CommissionService {
         revenuAnnonce.setCommission(calculerAnnonceFromPrix(annonce.getPrix(), commission));
         revenuAnnonce.setPourcentageCommission(commission);
         revenuAnnonce.setDateCommission(new Date());
+        revenuAnnonce.setAnnonce(annonce);
 
         revenuAnnonceRepository.save(revenuAnnonce);
 

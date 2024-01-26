@@ -68,12 +68,12 @@ public class AnnonceService {
         ArrayList<Annonce> annonces = new ArrayList<>();
         
         // Filtrer par utilisateur
-        if (filtreAnnonce.getUtilisateur() == null) annonces = (ArrayList<Annonce>) annonceRepository.findAll();
-        else annonces = (ArrayList<Annonce>) annonceRepository.findByUtilisateur(filtreAnnonce.getUtilisateur());
+        if (filtreAnnonce.getUtilisateur() != null) annonces = (ArrayList<Annonce>) annonceRepository.findByUtilisateur(filtreAnnonce.getUtilisateur());
 
         // Si le filtre specifie le proprietaire
-        if (filtreAnnonce.getUtilisateur() == null && filtreAnnonce.getOwner() != null)
-            annonces = (ArrayList<Annonce>) annonceRepository.findByUtilisateurNot(filtreAnnonce.getOwner());
+        if (filtreAnnonce.getOwner() != null) {
+            annonces.retainAll((ArrayList<Annonce>) annonceRepository.findByUtilisateurNot(filtreAnnonce.getOwner()));
+        }
 
         // FILTRES
         // Mots cle
@@ -317,15 +317,15 @@ public class AnnonceService {
             //        int places;
             //        int etatVehicule;
         SousAnnonce sousAnnonce = new SousAnnonce();
-        sousAnnonce.setMarque(marqueRepository.findById(ajoutAnnonceRequete.getMarque()).get());
-        sousAnnonce.setModele(modeleRepository.findById(ajoutAnnonceRequete.getModele()).get());
-        sousAnnonce.setAnneeModele(anneeModeleRepository.findById(ajoutAnnonceRequete.getAnneeModele()).get());
-        sousAnnonce.setBoiteDeVitesse(boiteDeVitesseRepository.findById(ajoutAnnonceRequete.getBoiteDeVitesse()).get());
-        sousAnnonce.setCouleurVehicule(couleurVehiculeRepository.findById(ajoutAnnonceRequete.getCouleurVehicule()).get());
-        sousAnnonce.setCarburant(carburantRepository.findById(ajoutAnnonceRequete.getCarburant()).get());
-        sousAnnonce.setCategorieVehicule(categorieVehiculeRepository.findById(ajoutAnnonceRequete.getCategorieVehicule()).get());
-        sousAnnonce.setPlaces(nombrePlacesRepository.findById(ajoutAnnonceRequete.getPlaces()).get());
-
+        if (ajoutAnnonceRequete.getMarque() != -1) sousAnnonce.setMarque(marqueRepository.findById(ajoutAnnonceRequete.getMarque()).get());
+        if (ajoutAnnonceRequete.getModele() != -1) sousAnnonce.setModele(modeleRepository.findById(ajoutAnnonceRequete.getModele()).get());
+        if (ajoutAnnonceRequete.getAnneeModele() != -1) sousAnnonce.setAnneeModele(anneeModeleRepository.findById(ajoutAnnonceRequete.getAnneeModele()).orElse(null));
+        if (ajoutAnnonceRequete.getBoiteDeVitesse() != -1) sousAnnonce.setBoiteDeVitesse(boiteDeVitesseRepository.findById(ajoutAnnonceRequete.getBoiteDeVitesse()).get());
+        if (ajoutAnnonceRequete.getCouleurVehicule() != -1) sousAnnonce.setCouleurVehicule(couleurVehiculeRepository.findById(ajoutAnnonceRequete.getCouleurVehicule()).get());
+        if (ajoutAnnonceRequete.getCarburant() != -1) sousAnnonce.setCarburant(carburantRepository.findById(ajoutAnnonceRequete.getCarburant()).get());
+        if (ajoutAnnonceRequete.getCategorieVehicule() != -1) sousAnnonce.setCategorieVehicule(categorieVehiculeRepository.findById(ajoutAnnonceRequete.getCategorieVehicule()).get());
+        if (ajoutAnnonceRequete.getPlaces() != -1) sousAnnonce.setPlaces(nombrePlacesRepository.findById(ajoutAnnonceRequete.getPlaces()).get());
+        if (ajoutAnnonceRequete.getEtatVehicule() != -1) sousAnnonce.setEtatVehicule(etatVehiculeRepository.findById(ajoutAnnonceRequete.getEtatVehicule()).get());
         // Ajout annonce
         annonce = annonceRepository.save(annonce);
 
