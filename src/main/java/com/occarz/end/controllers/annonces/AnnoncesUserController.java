@@ -2,6 +2,7 @@ package com.occarz.end.controllers.annonces;
 
 import com.occarz.end.dto.annonce.FiltreAnnonce;
 import com.occarz.end.dto.annonce.ResultatFiltreAnnonce;
+import com.occarz.end.dto.requests.AjoutAnnonceRequete;
 import com.occarz.end.dto.requests.FiltreAnnonceRequete;
 import com.occarz.end.dto.response.RestResponse;
 import com.occarz.end.entities.annonce.Annonce;
@@ -49,6 +50,20 @@ public class AnnoncesUserController {
         return new RestResponse<>(resultatFiltreAnnonce);
     }
 
+    @GetMapping("/attentes")
+    public RestResponse<ResultatFiltreAnnonce> mesAnnoncesEnAttente(@RequestBody FiltreAnnonceRequete filtres) {
+        // Produire le filtre des annonces
+        FiltreAnnonce filtreAnnonce = filtreAnnonceService.build(filtres);
+        filtreAnnonce.setStatusAnnonce(Annonce.AnnonceState.EN_ATTENTE);
+
+        // Ajouter l'utilsateur
+        filtreAnnonce.setUtilisateur(utilisateurService.obtenirUtilisateurConnecter());
+
+        // Resutlats
+        ResultatFiltreAnnonce resultatFiltreAnnonce = new ResultatFiltreAnnonce(filtreAnnonce, annonceService.filtrerAnnonces(filtreAnnonce));
+        return new RestResponse<>(resultatFiltreAnnonce);
+    }
+
     @GetMapping(value = "", params = {"ordre", "field"})
     public RestResponse<ResultatFiltreAnnonce> mesAnnoncesTrier(@RequestBody FiltreAnnonceRequete filtres,
                                                                 @RequestParam("order") String ordre,
@@ -64,7 +79,7 @@ public class AnnoncesUserController {
     }
 
     // Marquer une annonces comme vendue
-    @PostMapping("/vendue/{id}")
+    @PostMapping("/{id}/vendu")
     public RestResponse<String> marquerAnnonceVendue(@PathVariable("id") int idAnnonce) {
         // Obtenir l'annonce voulu
         Annonce annonce = annonceService.findById(idAnnonce);
@@ -120,5 +135,10 @@ public class AnnoncesUserController {
         ArrayList<Annonce> annonces = annonceService.filtrerAnnonces(filtreAnnonce);
         annonces = (ArrayList<Annonce>) annonceService.trierAnnonce(annonces, ordre, field);
         return new RestResponse<>(annonces);
+    }
+
+    @PostMapping("")
+    public RestResponse<Annonce> ajouterAnnonce(@RequestBody AjoutAnnonceRequete ajoutAnnonceRequete) {
+        return new RestResponse<>(annonceService.ajouterAnnonce(ajoutAnnonceRequete));
     }
 }

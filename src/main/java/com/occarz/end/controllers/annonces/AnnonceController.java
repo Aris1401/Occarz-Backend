@@ -20,7 +20,7 @@ import com.occarz.end.entities.annonce.Annonce;
 import com.occarz.end.services.annonces.AnnonceService;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/annonces")
 public class AnnonceController {
     @Autowired
     private AnnonceService annonceService;
@@ -28,14 +28,14 @@ public class AnnonceController {
     private FiltreAnnonceService filtreAnnonceService;
 
     // Front office (USER ou TOUT LE MONDE)
-    @GetMapping("/annonces")
+    @GetMapping("")
     public RestResponse<ResultatFiltreAnnonce> obtenirAnnonces(@RequestBody FiltreAnnonceRequete filtreAnnonce) {
         FiltreAnnonce filtre = filtreAnnonceService.build(filtreAnnonce);
 
         return new RestResponse<ResultatFiltreAnnonce>(new ResultatFiltreAnnonce(filtre, (ArrayList<Annonce>) annonceService.filtrerAnnonces(filtre)));
     }
 
-    @GetMapping(value = "/annonces", params = {"ordre", "field"})
+    @GetMapping(value = "", params = {"ordre", "field"})
     public RestResponse<ResultatFiltreAnnonce> obtenirAnnoncesTrier(@RequestBody FiltreAnnonceRequete filtreAnnonce,
                                                                    @RequestParam("ordre") String ordre,
                                                                    @RequestParam("field") String field)  {
@@ -43,6 +43,9 @@ public class AnnonceController {
         return new RestResponse<ResultatFiltreAnnonce>(new ResultatFiltreAnnonce(filtre, (ArrayList<Annonce>) annonceService.trierAnnonceParFiltre(filtre, ordre, field)));
     }
 
-    // Back office (ADMIN)
+    @GetMapping("/{idAnnonce}/images")
+    public RestResponse<ArrayList<String>> obtenirToutImageAnnonce(@PathVariable int idAnnonce) {
+        return new RestResponse<>(annonceService.obtenirImagesAnnonce(idAnnonce));
+    }
 
 }

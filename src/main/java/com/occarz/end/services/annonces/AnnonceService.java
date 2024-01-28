@@ -1,12 +1,20 @@
 package com.occarz.end.services.annonces;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+import com.occarz.end.dto.requests.AjoutAnnonceRequete;
+import com.occarz.end.dto.requests.FiltreAnnonceRequete;
 import com.occarz.end.entities.annonce.AnnonceFavoris;
+import com.occarz.end.entities.annonce.AnnonceImage;
+import com.occarz.end.entities.annonce.SousAnnonce;
 import com.occarz.end.entities.vehicule.*;
 import com.occarz.end.repository.annonce.AnnonceFavorisRepository;
+import com.occarz.end.repository.annonce.AnnonceImageRepository;
 import com.occarz.end.repository.user.UtilisateurRepository;
+import com.occarz.end.repository.voiture.*;
 import com.occarz.end.security.services.UserDetailsImpl;
+import com.occarz.end.services.utlisateur.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +25,7 @@ import com.occarz.end.entities.annonce.Annonce;
 import com.occarz.end.entities.user.Utilisateur;
 import com.occarz.end.repository.annonce.AnnonceRepository;
 import com.occarz.end.repository.annonce.SousAnnonceRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AnnonceService {
@@ -28,6 +37,9 @@ public class AnnonceService {
 
     @Autowired
     private AnnonceFavorisRepository annonceFavorisRepository;
+
+    @Autowired
+    private UtilisateurService utilisateurService;
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
@@ -53,15 +65,15 @@ public class AnnonceService {
     public ArrayList<Annonce> filtrerAnnonces(FiltreAnnonce filtreAnnonce) {
         // Si il ya aucun filtre
         if (filtreAnnonce == null) return (ArrayList<Annonce>) annonceRepository.findAll();
-        ArrayList<Annonce> annonces = new ArrayList<>();
+        ArrayList<Annonce> annonces = (ArrayList<Annonce>) annonceRepository.findAll();
         
         // Filtrer par utilisateur
-        if (filtreAnnonce.getUtilisateur() == null) annonces = (ArrayList<Annonce>) annonceRepository.findAll();
-        else annonces = (ArrayList<Annonce>) annonceRepository.findByUtilisateur(filtreAnnonce.getUtilisateur());
+        if (filtreAnnonce.getUtilisateur() != null) annonces = (ArrayList<Annonce>) annonceRepository.findByUtilisateur(filtreAnnonce.getUtilisateur());
 
         // Si le filtre specifie le proprietaire
-        if (filtreAnnonce.getUtilisateur() == null && filtreAnnonce.getOwner() != null)
-            annonces = (ArrayList<Annonce>) annonceRepository.findByUtilisateurNot(filtreAnnonce.getOwner());
+        if (filtreAnnonce.getOwner() != null) {
+            annonces.retainAll((ArrayList<Annonce>) annonceRepository.findByUtilisateurNot(filtreAnnonce.getOwner()));
+        }
 
         // FILTRES
         // Mots cle
@@ -258,5 +270,80 @@ public class AnnonceService {
 
         // Obtenir les annonces favories
         return (ArrayList<AnnonceFavoris>) annonceFavorisRepository.findByUtilisateur(utilisateur);
+    }
+
+    // Build sous annonce
+    @Autowired
+    private MarqueRepository marqueRepository;
+    @Autowired
+    private ModeleRepository modeleRepository;
+    @Autowired
+    private AnneeModeleRepository anneeModeleRepository;
+    @Autowired
+    private BoiteDeVitesseRepository boiteDeVitesseRepository;
+    @Autowired
+    private CarburantRepository carburantRepository;
+    @Autowired
+    private CategorieVehiculeRepository categorieVehiculeRepository;
+    @Autowired
+    private NombrePlacesRepository nombrePlacesRepository;
+    @Autowired
+    private CouleurVehiculeRepository couleurVehiculeRepository;
+    @Autowired
+    private EtatVehiculeRepository etatVehiculeRepository;
+
+    @Autowired
+    private AnnonceImageRepository annonceImageRepository;
+
+    @Transactional
+    public Annonce ajouterAnnonce(AjoutAnnonceRequete ajoutAnnonceRequete) {
+        // Creation de l'annonce
+        Annonce annonce = new Annonce();
+        annonce.setEtat(Annonce.AnnonceState.EN_ATTENTE);
+        annonce.setDateAnnonce(new Date());
+        annonce.setTitre(ajoutAnnonceRequete.getTitre());
+        annonce.setDescription(ajoutAnnonceRequete.getDescription());
+        annonce.setPrix(ajoutAnnonceRequete.getPrix());
+        annonce.setUtilisateur(utilisateurService.obtenirUtilisateurConnecter());
+
+        // Sous annonce
+            //        int marque;
+            //        int modele;
+            //        int anneeModele;
+            //        int boiteDeVitesse;
+            //        int couleurVehicule;
+            //        int carburant;
+            //        int categorieVehicule;
+            //        int places;
+            //        int etatVehicule;
+        SousAnnonce sousAnnonce = new SousAnnonce();
+        if (ajoutAnnonceRequete.getMarque() != -1) sousAnnonce.setMarque(marqueRepository.findById(ajoutAnnonceRequete.getMarque()).get());
+        if (ajoutAnnonceRequete.getModele() != -1) sousAnnonce.setModele(modeleRepository.findById(ajoutAnnonceRequete.getModele()).get());
+        if (ajoutAnnonceRequete.getAnneeModele() != -1) sousAnnonce.setAnneeModele(anneeModeleRepository.findById(ajoutAnnonceRequete.getAnneeModele()).orElse(null));
+        if (ajoutAnnonceRequete.getBoiteDeVitesse() != -1) sousAnnonce.setBoiteDeVitesse(boiteDeVitesseRepository.findById(ajoutAnnonceRequete.getBoiteDeVitesse()).get());
+        if (ajoutAnnonceRequete.getCouleurVehicule() != -1) sousAnnonce.setCouleurVehicule(couleurVehiculeRepository.findById(ajoutAnnonceRequete.getCouleurVehicule()).get());
+        if (ajoutAnnonceRequete.getCarburant() != -1) sousAnnonce.setCarburant(carburantRepository.findById(ajoutAnnonceRequete.getCarburant()).get());
+        if (ajoutAnnonceRequete.getCategorieVehicule() != -1) sousAnnonce.setCategorieVehicule(categorieVehiculeRepository.findById(ajoutAnnonceRequete.getCategorieVehicule()).get());
+        if (ajoutAnnonceRequete.getPlaces() != -1) sousAnnonce.setPlaces(nombrePlacesRepository.findById(ajoutAnnonceRequete.getPlaces()).get());
+        if (ajoutAnnonceRequete.getEtatVehicule() != -1) sousAnnonce.setEtatVehicule(etatVehiculeRepository.findById(ajoutAnnonceRequete.getEtatVehicule()).get());
+        // Ajout annonce
+        annonce = annonceRepository.save(annonce);
+
+        // Ajout sous annonce
+        sousAnnonce.setAnnonce(annonce);
+        sousAnnonce = sousAnnonceRepository.save(sousAnnonce);
+
+        // Sauvegarde des images
+        AnnonceImage annonceImage = new AnnonceImage();
+        annonceImage.setIdAnnonce(annonce.getId());
+        annonceImage.setImages((ArrayList<String>) ajoutAnnonceRequete.getImages());
+
+        annonceImageRepository.save(annonceImage);
+
+        return annonce;
+    }
+
+    public ArrayList<String> obtenirImagesAnnonce(int idAnnonce) {
+        return annonceImageRepository.findByIdAnnonce(idAnnonce);
     }
 }
