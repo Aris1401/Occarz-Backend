@@ -14,5 +14,5 @@ public class Message {
     String message;
     Date dateEnvoie;
     int idUtilisateur;
-    int idDiscussion;
+    String idDiscussion;
 }

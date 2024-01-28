@@ -117,4 +117,34 @@ public class Annonce implements Serializable {
     public PublicUserInformation getUtilisateur() {
         return new PublicUserInformation(utilisateur);
     }
+
+    public ArrayList<String> getLabels() {
+        ArrayList<String> labels = new ArrayList<>();
+
+        if (getSousAnnonces() != null) {
+            for (SousAnnonce sousAnnonce : getSousAnnonces()) {
+//                Marque marque;
+//                Modele modele;
+//                AnneeModele anneeModele;
+//                BoiteDeVitesse boiteDeVitesse;
+//                CouleurVehicule couleurVehicule;
+//                Carburant carburant;
+//                CategorieVehicule categorieVehicule;
+//                NombrePlaces places;
+//                EtatVehicule etatVehicule;
+
+                if (sousAnnonce.getMarque() != null) labels.add(sousAnnonce.getMarque().getNom());
+                if (sousAnnonce.getModele() != null) labels.add(sousAnnonce.getModele().getNom());
+                if (sousAnnonce.getAnneeModele() != null) labels.add(sousAnnonce.getAnneeModele().getAnnee());
+                if (sousAnnonce.getBoiteDeVitesse() != null) labels.add(sousAnnonce.getBoiteDeVitesse().getNom());
+                if (sousAnnonce.getCouleurVehicule() != null) labels.add(sousAnnonce.getCouleurVehicule().getCouleur());
+                if (sousAnnonce.getCarburant() != null) labels.add(sousAnnonce.getCarburant().getNom());
+                if (sousAnnonce.getCategorieVehicule() != null) labels.add(sousAnnonce.getCategorieVehicule().getNom());
+                if (sousAnnonce.getPlaces() != null) labels.add(sousAnnonce.getPlaces().getNombre());
+                if (sousAnnonce.getEtatVehicule() != null) labels.add(sousAnnonce.getEtatVehicule().getNom());
+            }
+        }
+
+        return labels;
+    }
 }

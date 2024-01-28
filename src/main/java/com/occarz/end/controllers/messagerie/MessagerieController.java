@@ -42,13 +42,13 @@ public class MessagerieController {
     }
 
     @GetMapping("/discussions/{idDiscussion}/messages")
-    public RestResponse<List<MessageDTO>> obtenirMessages(@PathVariable int idDiscussion) {
+    public RestResponse<List<MessageDTO>> obtenirMessages(@PathVariable String idDiscussion) {
         List<Message> messages = discussionService.obtenirMessagesDiscussion(idDiscussion);
         return new RestResponse<>(discussionService.obtenirCoteesMessages(messages));
     }
 
     @PostMapping("/discussions/{idDiscussion}/messages")
-    public RestResponse<Message> envoyerMessage(@PathVariable int idDiscussion, @RequestBody MessageRequete messageRequete) {
+    public RestResponse<Message> envoyerMessage(@PathVariable String idDiscussion, @RequestBody MessageRequete messageRequete) {
         return new RestResponse<>(discussionService.envoyerMessage(messageRequete.getMessage(), idDiscussion));
     }
 }

@@ -54,6 +54,7 @@ public class AuthenticationController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String role = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList()).get(0);
 
+        refreshTokenService.deleteByUserId(userDetails.getPublicUserInformation().getId());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getPublicUserInformation().getId());
 
         JwtResponse jwtResponse = new JwtResponse();

@@ -104,7 +104,7 @@ public class DiscussionService {
     }
 
     // Messages
-    public List<Message> obtenirMessagesDiscussion(int idDiscussion) {
+    public List<Message> obtenirMessagesDiscussion(String idDiscussion) {
         return messageRepository.findByIdDiscussion(idDiscussion);
     }
 
@@ -122,7 +122,7 @@ public class DiscussionService {
         return messageDTOS;
     }
 
-    public Message envoyerMessage(String messageTexte, int idDiscussion) {
+    public Message envoyerMessage(String messageTexte, String idDiscussion) {
         // Obtenir l'utilisateur connecter
         Utilisateur utilisateur = utilisateurService.obtenirUtilisateurConnecter();
 

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/v1/admin/annonces")
+@CrossOrigin(origins = "*")
 public class AnnonceAdminController {
     @Autowired
     AnnonceService annonceService;
@@ -26,8 +27,9 @@ public class AnnonceAdminController {
         UserDetailsImpl utilisateur = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         FiltreAnnonceRequete filtreAnnonce = new FiltreAnnonceRequete();
-        filtreAnnonce.setOwner(utilisateur.getPublicUserInformation().getId());
+//        filtreAnnonce.setOwner(utilisateur.getPublicUserInformation().getId());
         filtreAnnonce.setStatusAnnonce(Annonce.AnnonceState.EN_ATTENTE.ordinal());
+        System.out.println(filtreAnnonce.getStatusAnnonce());
 
         // Build annonce
         FiltreAnnonce filtre = filtreAnnonceService.build(filtreAnnonce);
@@ -37,13 +39,13 @@ public class AnnonceAdminController {
         return new RestResponse<ResultatFiltreAnnonce>(resultatFiltreAnnonce);
     }
 
-    @GetMapping(value = "", params = {"order", "field"})
+    @GetMapping(value = "", params = {"ordre", "field"})
     public RestResponse<ResultatFiltreAnnonce> annoncesEnAttenteDeValidationTrier(@RequestParam("ordre") String ordre,
                                                                                   @RequestParam("field") String field) {
         UserDetailsImpl utilisateur = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         FiltreAnnonceRequete filtreAnnonce = new FiltreAnnonceRequete();
-        filtreAnnonce.setOwner(utilisateur.getPublicUserInformation().getId());
+//        filtreAnnonce.setOwner(utilisateur.getPublicUserInformation().getId());
         filtreAnnonce.setStatusAnnonce(Annonce.AnnonceState.EN_ATTENTE.ordinal());
 
         // Build annonce

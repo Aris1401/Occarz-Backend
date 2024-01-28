@@ -65,7 +65,7 @@ public class AnnonceService {
     public ArrayList<Annonce> filtrerAnnonces(FiltreAnnonce filtreAnnonce) {
         // Si il ya aucun filtre
         if (filtreAnnonce == null) return (ArrayList<Annonce>) annonceRepository.findAll();
-        ArrayList<Annonce> annonces = new ArrayList<>();
+        ArrayList<Annonce> annonces = (ArrayList<Annonce>) annonceRepository.findAll();
         
         // Filtrer par utilisateur
         if (filtreAnnonce.getUtilisateur() != null) annonces = (ArrayList<Annonce>) annonceRepository.findByUtilisateur(filtreAnnonce.getUtilisateur());
