@@ -41,7 +41,7 @@ public class AnnonceController {
                                                                    @RequestParam("ordre") String ordre,
                                                                    @RequestParam("field") String field)  {
         FiltreAnnonce filtre = filtreAnnonceService.build(filtreAnnonce);
-        return new RestResponse<ResultatFiltreAnnonce>(new ResultatFiltreAnnonce(filtre, (ArrayList<Annonce>) annonceService.trierAnnonceParFiltre(filtre, ordre, field)));
+        return new RestResponse<ResultatFiltreAnnonce>(new ResultatFiltreAnnonce(filtre, (ArrayList<Annonce>) annonceService.trierAnnonceParFiltre(filtre, ordre.toLowerCase().trim(), field.toLowerCase().trim())));
     }
 
     @GetMapping("/{idAnnonce}/images")
