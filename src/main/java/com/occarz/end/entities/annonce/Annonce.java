@@ -123,7 +123,6 @@ public class Annonce implements Serializable {
 
         if (getSousAnnonces() != null) {
             for (SousAnnonce sousAnnonce : getSousAnnonces()) {
-//                NombrePlaces places;
 //                EtatVehicule etatVehicule;
 
                 if (sousAnnonce.getMarque() != null) labels.add(sousAnnonce.getMarque().getNom());
