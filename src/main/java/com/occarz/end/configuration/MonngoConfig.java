@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import java.util.Collection;
 import java.util.Collections;
 
-@Configuration
+//@Configuration
 public class MonngoConfig extends AbstractMongoClientConfiguration {
     @Override
     protected String getDatabaseName() {
