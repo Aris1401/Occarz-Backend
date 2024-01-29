@@ -123,11 +123,6 @@ public class Annonce implements Serializable {
 
         if (getSousAnnonces() != null) {
             for (SousAnnonce sousAnnonce : getSousAnnonces()) {
-//                Marque marque;
-//                Modele modele;
-//                AnneeModele anneeModele;
-//                BoiteDeVitesse boiteDeVitesse;
-//                CouleurVehicule couleurVehicule;
 //                Carburant carburant;
 //                CategorieVehicule categorieVehicule;
 //                NombrePlaces places;
