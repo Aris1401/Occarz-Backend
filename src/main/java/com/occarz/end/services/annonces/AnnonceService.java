@@ -198,7 +198,10 @@ public class AnnonceService {
         return trierAnnonce(filtrerAnnonces(filtres), order, field);
     }
     // Trier annonces
-    public List<Annonce> trierAnnonce(ArrayList<Annonce> annonces, String ordre, String field) {
+    public List<Annonce> trierAnnonce(ArrayList<Annonce> annonces, String or, String fi) {
+        final String ordre = or.trim().toLowerCase();
+        final String field = fi.trim().toLowerCase();
+
         switch (field) {
             case "date" -> {
                 annonces.sort((annonce1, annonce2) -> {
