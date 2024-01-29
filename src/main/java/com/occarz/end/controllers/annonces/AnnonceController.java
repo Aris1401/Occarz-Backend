@@ -21,6 +21,7 @@ import com.occarz.end.services.annonces.AnnonceService;
 
 @RestController
 @RequestMapping("/api/v1/annonces")
+@CrossOrigin( origins = "*")
 public class AnnonceController {
     @Autowired
     private AnnonceService annonceService;
