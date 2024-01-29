@@ -201,7 +201,7 @@ public class AnnonceService {
     public List<Annonce> trierAnnonce(ArrayList<Annonce> annonces, String ordre, String field) {
         switch (field) {
             case "date" -> {
-                annonces.sort((annonce1, annonce2) -> {
+                 annonces.sort((annonce1, annonce2) -> {
                     switch (ordre) {
                         case "asc" -> {
                             return annonce1.getDateAnnonce().compareTo(annonce2.getDateAnnonce());

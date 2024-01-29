@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import java.util.Collection;
 import java.util.Collections;
 
-//@Configuration
+@Configuration
 public class MonngoConfig extends AbstractMongoClientConfiguration {
     @Override
     protected String getDatabaseName() {
@@ -19,7 +19,7 @@ public class MonngoConfig extends AbstractMongoClientConfiguration {
 
     @Override
     public MongoClient mongoClient() {
-        ConnectionString connectionString = new ConnectionString("mongodb://mongo:GCE53d62dF12gC-2HHH1fG-Hf2fCgFc-@monorail.proxy.rlwy.net:16009/occarz");
+        ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/occarz");
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
                 .build();
