@@ -17,8 +17,8 @@ values
     ('Mercedes Zavatra', 'Amidy maika', '2024-01-01', 1040000, 0, 1),
     ('Mercedes Zavatra 1', 'Amidy maika', '2024-01-01', 1200000, 0, 2),
     ('Mercedes Zavatra 2', 'Amidy maika', '2024-01-01', 1040000, 0, 2),
-    ('Mercedes Zavatra 3', 'Amidy maika', '2024-01-01', 1060000, 0, 2),
-    ('Mercedes Zavatra 4', 'Amidy maika', '2024-01-01', 10350000, 0, 2),
+    ('Mercedes Zavatra 3', 'Amidy maika', '2024-01-01', 1060000, 2, 2),
+    ('Mercedes Zavatra 4', 'Amidy maika', '2024-01-01', 10350000, 2, 2),
     ('Mitsubishi Zavatra', 'Amidy maika', '2024-01-02', 900500, 1, 2),
     ('Mercedes 2 Zavatra', 'Amidy maika 2', '2024-01-04', 1000000, 2, 1);
 
@@ -95,9 +95,9 @@ insert into
 values
     (NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (NULL, 2, 1, 1, 1, 1, 1, 1, 1, 1),
-    (NULL, 3, 1, 1, 1, 1, 1, 1, 1, 1),
-    (NULL, 4, 1, 1, 1, 1, 1, 1, 1, 1),
-    (NULL, 5, 1, 1, 1, 1, 1, 1, 1, 1),
+    (NULL, 3, 1, 1, 1, 1, 1, 2, 1, 1),
+    (NULL, 4, 1, 1, 1, 1, 1, 2, 1, 1),
+    (NULL, 5, 1, 1, 1, 1, 1, 3, 1, 1),
     (NULL, 2, 2, 2, 2, 2, 1, 2, 2, 2);
 
 -- Mois de l'annee
@@ -108,18 +108,19 @@ INSERT into mois(nom) values ('Janvier'), ('Fevrier'), ('Mars'), ('Avril'), ('Ma
 INSERT INTO revenu_annonce (commission, id_annonce, pourcentage_commission, date_commission)
 SELECT
     floor(random() * 100000000) + 1000000,
-    generate_series(1, 3) AS id_annonce, -- Alternance des identifiants d'annonce de 0 à 4
+    generate_series(1, 7) AS id_annonce,
     20,
-    CURRENT_TIMESTAMP - (floor(random() * 365) + 1) * INTERVAL '1 day' * (floor(random() * 10) + 1); -- Date actuelle pour toutes les entrées
+    CURRENT_TIMESTAMP - (floor(random() * 365) + 1) * INTERVAL '1 day' * (floor(random() * 10) + 1)
+FROM generate_series(1, 50);
 
--- Insertion dans la table revenu_utilisateur avec des montants aléatoires
 INSERT INTO revenu_utilisateur (id_annonce, montant, date_revenu)
 SELECT
     id_annonce,
-    floor(random() * 100000000) + 1000000, -- Montant aléatoire entre 1,000,000 et 100,000,000
-    CURRENT_TIMESTAMP - (floor(random() * 365) + 1) * INTERVAL '1 day' * (floor(random() * 10) + 1) -- Date actuelle pour toutes les entrées
-FROM
-    generate_series(1, 3) AS id_annonce; -- Alternance des identifiants d'annonce de 0 à 4
+    floor(random() * 100000000) + 1000000,
+    CURRENT_TIMESTAMP - (floor(random() * 365) + 1) * INTERVAL '1 day' * (floor(random() * 10) + 1)
+FROM generate_series(1, 50) as iteration
+CROSS JOIN (SELECT unnest(ARRAY[1, 2, 3, 4, 5, 6, 7]) AS id_annonce) as annonces;
+
 
 --- STATISTIQUEs
 --- Commission total
