@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/user/annonces")
 public class AnnoncesUserController {
