@@ -51,6 +51,19 @@ public class AnnoncesUserController {
         return new RestResponse<>(resultatFiltreAnnonce);
     }
 
+    @PostMapping("")
+    public RestResponse<ResultatFiltreAnnonce> mesAnnoncesWithData(@RequestBody FiltreAnnonceRequete filtres) {
+        // Produire le filtre des annonces
+        FiltreAnnonce filtreAnnonce = filtreAnnonceService.build(filtres);
+
+        // Ajouter l'utilsateur
+        filtreAnnonce.setUtilisateur(utilisateurService.obtenirUtilisateurConnecter());
+
+        // Resutlats
+        ResultatFiltreAnnonce resultatFiltreAnnonce = new ResultatFiltreAnnonce(filtreAnnonce, annonceService.filtrerAnnonces(filtreAnnonce));
+        return new RestResponse<>(resultatFiltreAnnonce);
+    }
+
     @GetMapping("/attentes")
     public RestResponse<ResultatFiltreAnnonce> mesAnnoncesEnAttente(@RequestBody FiltreAnnonceRequete filtres) {
         // Produire le filtre des annonces
