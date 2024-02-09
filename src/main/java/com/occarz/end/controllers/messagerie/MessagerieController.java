@@ -16,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/user/messagerie")
+@CrossOrigin(origins = "*")
 public class MessagerieController {
     @Autowired
     DiscussionService discussionService;
