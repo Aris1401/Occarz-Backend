@@ -44,6 +44,21 @@ public class AnnonceController {
         return new RestResponse<ResultatFiltreAnnonce>(new ResultatFiltreAnnonce(filtre, (ArrayList<Annonce>) annonceService.trierAnnonceParFiltre(filtre, ordre.toLowerCase().trim(), field.toLowerCase().trim())));
     }
 
+    @PostMapping("/")
+    public RestResponse<ResultatFiltreAnnonce> obtenirAnnoncesWithData(@RequestBody FiltreAnnonceRequete filtreAnnonce) {
+        FiltreAnnonce filtre = filtreAnnonceService.build(filtreAnnonce);
+
+        return new RestResponse<ResultatFiltreAnnonce>(new ResultatFiltreAnnonce(filtre, (ArrayList<Annonce>) annonceService.filtrerAnnonces(filtre)));
+    }
+
+    @PostMapping(value = "/", params = {"ordre", "field"})
+    public RestResponse<ResultatFiltreAnnonce> obtenirAnnoncesTrierWithData(@RequestBody FiltreAnnonceRequete filtreAnnonce,
+                                                                    @RequestParam("ordre") String ordre,
+                                                                    @RequestParam("field") String field)  {
+        FiltreAnnonce filtre = filtreAnnonceService.build(filtreAnnonce);
+        return new RestResponse<ResultatFiltreAnnonce>(new ResultatFiltreAnnonce(filtre, (ArrayList<Annonce>) annonceService.trierAnnonceParFiltre(filtre, ordre.toLowerCase().trim(), field.toLowerCase().trim())));
+    }
+
     @GetMapping("/{idAnnonce}/images")
     public RestResponse<ArrayList<String>> obtenirToutImageAnnonce(@PathVariable int idAnnonce) {
         return new RestResponse<>(annonceService.obtenirImagesAnnonce(idAnnonce));
