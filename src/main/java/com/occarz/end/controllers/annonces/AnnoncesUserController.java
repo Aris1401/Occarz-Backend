@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/user/annonces")
+@CrossOrigin(origins = "*")
 public class AnnoncesUserController {
     @Autowired
     AnnonceService annonceService;
