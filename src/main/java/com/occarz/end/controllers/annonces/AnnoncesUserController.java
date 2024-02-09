@@ -51,7 +51,7 @@ public class AnnoncesUserController {
         return new RestResponse<>(resultatFiltreAnnonce);
     }
 
-    @PostMapping("")
+    @PostMapping("/")
     public RestResponse<ResultatFiltreAnnonce> mesAnnoncesWithData(@RequestBody FiltreAnnonceRequete filtres) {
         // Produire le filtre des annonces
         FiltreAnnonce filtreAnnonce = filtreAnnonceService.build(filtres);
