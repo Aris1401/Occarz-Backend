@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/v1/user/annonces")
-@CrossOrigin(origins = "*")
+@CrossOrigin
 public class AnnoncesUserController {
     @Autowired
     AnnonceService annonceService;

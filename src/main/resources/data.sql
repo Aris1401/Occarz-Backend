@@ -298,3 +298,5 @@ left join
     and v_details_date_marque.id_mois = v_details_vente_marque_calcul.mois
     and v_details_date_marque.jour = v_details_vente_marque_calcul.jour
     and v_details_date_marque.id_marque = v_details_vente_marque_calcul.marque;
+
+insert into configuration(commission) values (20);
