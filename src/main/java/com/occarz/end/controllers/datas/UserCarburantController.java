@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/user/carburants")
 @CrossOrigin(origins = "*")
-public class CarburantController {
+public class UserCarburantController {
     @Autowired
     CarburantRepository carburantRepository;
 

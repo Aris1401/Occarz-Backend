@@ -1,8 +1,6 @@
 package com.occarz.end.controllers.datas;
 
-import com.occarz.end.dto.requests.vehicule.ModeleRequete;
 import com.occarz.end.dto.response.RestResponse;
-import com.occarz.end.entities.vehicule.Marque;
 import com.occarz.end.entities.vehicule.Modele;
 import com.occarz.end.repository.voiture.MarqueRepository;
 import com.occarz.end.repository.voiture.ModeleRepository;
@@ -14,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/user/modeles")
 @CrossOrigin(origins = "*")
-public class ModeleController {
+public class UserModeleController {
     @Autowired
     ModeleRepository modeleRepository;
     @Autowired

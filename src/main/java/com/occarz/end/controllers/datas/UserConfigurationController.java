@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/user/configuration")
 @CrossOrigin(origins = "*")
-public class ConfigurationController {
+public class UserConfigurationController {
     @Autowired
     ConfigurationRepository configurationRepository;
 

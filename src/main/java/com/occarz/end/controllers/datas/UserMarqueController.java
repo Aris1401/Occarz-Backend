@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/user/marques")
 @CrossOrigin(origins = "*")
-public class MarqueController {
+public class UserMarqueController {
     @Autowired
     MarqueRepository marqueRepository;
 

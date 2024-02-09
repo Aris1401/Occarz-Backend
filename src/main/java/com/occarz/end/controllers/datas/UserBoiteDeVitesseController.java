@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/user/boiteDeVitesses")
 @CrossOrigin(origins = "*")
-public class BoiteDeVitesseController {
+public class UserBoiteDeVitesseController {
     @Autowired
     BoiteDeVitesseRepository boiteDeVitesseRepository;
 
