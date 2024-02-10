@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 public class Message {
     @Id
-    int id;
+    String id;
     String message;
     Date dateEnvoie;
     int idUtilisateur;
