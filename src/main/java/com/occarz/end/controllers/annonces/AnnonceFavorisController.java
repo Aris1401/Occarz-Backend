@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/user/annonces/favoris")
-@CrossOrigin
 public class AnnonceFavorisController {
     @Autowired
     AnnonceService annonceService;
