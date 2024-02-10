@@ -1,5 +1,6 @@
 package com.occarz.end.services.messagerie;
 
+import com.occarz.end.dto.messagerie.DiscussionDTO;
 import com.occarz.end.dto.messagerie.MessageDTO;
 import com.occarz.end.dto.user.PublicUserInformation;
 import com.occarz.end.entities.annonce.Annonce;
@@ -65,12 +66,25 @@ public class DiscussionService {
         return discussionRepository.save(discussion);
     }
 
-    public ArrayList<Discussion> allDiscussions() {
+    public ArrayList<DiscussionDTO> allDiscussions() {
         // Obtenir utilisateur
         Utilisateur utilisateur = utilisateurService.obtenirUtilisateurConnecter();
 
         // Discussions
-        return (ArrayList<Discussion>) discussionRepository.findByMembre(utilisateur.getId());
+        ArrayList<Discussion> discussions = (ArrayList<Discussion>) discussionRepository.findByMembre(utilisateur.getId());
+        ArrayList<DiscussionDTO> discussionDTOS = new ArrayList<>();
+
+        for (Discussion discussion : discussions) {
+            DiscussionDTO discussionDTO = new DiscussionDTO();
+            discussionDTO.setDateDiscussion(discussion.getDateDiscussion());
+            discussionDTO.setId(discussion.getId());
+            discussionDTO.setAnnonce(annonceService.findById(discussion.getIdAnnonce()));
+            discussionDTO.setReceveur(obtenirInterlocuteur(discussion));
+
+            discussionDTOS.add(discussionDTO);
+        }
+
+        return discussionDTOS;
     }
 
     ArrayList<Utilisateur> obtenirLesUtilisateursDiscussion(Discussion discussion) {

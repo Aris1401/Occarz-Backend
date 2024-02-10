@@ -1,5 +1,6 @@
 package com.occarz.end.controllers.messagerie;
 
+import com.occarz.end.dto.messagerie.DiscussionDTO;
 import com.occarz.end.dto.messagerie.MessageDTO;
 import com.occarz.end.dto.requests.MessageRequete;
 import com.occarz.end.dto.response.RestResponse;
@@ -25,8 +26,8 @@ public class MessagerieController {
     AnnonceService annonceService;
 
     @GetMapping("/discussions")
-    public RestResponse<ArrayList<Discussion>> obtenirDiscussions() {
-        return new RestResponse<ArrayList<Discussion>>(discussionService.allDiscussions());
+    public RestResponse<ArrayList<DiscussionDTO>> obtenirDiscussions() {
+        return new RestResponse<ArrayList<DiscussionDTO>>(discussionService.allDiscussions());
     }
 
     @PostMapping("/discussions/creer/{idAnnonce}")
