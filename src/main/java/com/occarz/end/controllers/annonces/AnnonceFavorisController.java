@@ -87,4 +87,56 @@ public class AnnonceFavorisController {
     public void enleverAnnonceDesFavoris(@PathVariable("id") int idAnnonce) {
         annonceService.enleverAnnonceDesFavoris(idAnnonce);
     }
+
+    @PostMapping("/")
+    public RestResponse<ResultatFiltreAnnonce> listeDesFavorisWithData(@RequestBody FiltreAnnonceRequete filtreAnnonceRequete) {
+        ArrayList<AnnonceFavoris> annonceFavorises = annonceService.annoncesFavoris();
+
+        // Obtenir les annonces en elles-memes
+        List<Annonce> annonces = annonceFavorises.stream()
+                .map(favoris -> {
+                    Annonce annonce = favoris.getAnnonce();
+                    annonce.setDateAnnonce(favoris.getDateFavoris());
+
+                    return annonce;
+                })
+                .collect(Collectors.toList());
+
+        // Filtre
+        FiltreAnnonce filtreAnnonce = filtreAnnonceService.build(filtreAnnonceRequete);
+        ArrayList<Annonce> annoncesFiltered = annonceService.filtrerAnnonces(filtreAnnonce);
+
+        annoncesFiltered.retainAll(annonces);
+
+        // Resultats filtre
+        ResultatFiltreAnnonce resultatFiltreAnnonce = new ResultatFiltreAnnonce(filtreAnnonce, annoncesFiltered);
+        return new RestResponse<>(resultatFiltreAnnonce);
+    }
+
+    @PostMapping(value = "/", params = {"ordre", "field"})
+    public RestResponse<ResultatFiltreAnnonce> listeDesFavorisTrierWithData(@RequestBody FiltreAnnonceRequete filtreAnnonceRequete,
+                                                                    @RequestParam("ordre") String ordre,
+                                                                    @RequestParam("field") String field) {
+        ArrayList<AnnonceFavoris> annonceFavorises = annonceService.annoncesFavoris();
+
+        // Obtenir les annonces en elles-memes
+        List<Annonce> annonces = annonceFavorises.stream()
+                .map(favoris -> {
+                    Annonce annonce = favoris.getAnnonce();
+                    annonce.setDateAnnonce(favoris.getDateFavoris());
+
+                    return annonce;
+                })
+                .collect(Collectors.toList());
+
+        // Filtre
+        FiltreAnnonce filtreAnnonce = filtreAnnonceService.build(filtreAnnonceRequete);
+        ArrayList<Annonce> annoncesFiltered = annonceService.filtrerAnnonces(filtreAnnonce);
+
+        annoncesFiltered.retainAll(annonces);
+
+        // Resultats filtre
+        ResultatFiltreAnnonce resultatFiltreAnnonce = new ResultatFiltreAnnonce(filtreAnnonce, (ArrayList<Annonce>) annonceService.trierAnnonce(annoncesFiltered, ordre, field));
+        return new RestResponse<>(resultatFiltreAnnonce);
+    }
 }
