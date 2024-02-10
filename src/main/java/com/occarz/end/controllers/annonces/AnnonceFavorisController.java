@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/user/annonces/favoris")
-@CrossOrigin(origins = "*")
+@CrossOrigin
 public class AnnonceFavorisController {
     @Autowired
     AnnonceService annonceService;
